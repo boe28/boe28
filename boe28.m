@@ -8,8 +8,6 @@ display('This program is supplemental to our report: Control and system engineer
 display('optimise energy transfer from natural refrigerant heat pump systems.')
 display('Please see chapter 7 for background and additional information.')
 display(' ')
-display(' ')
-display(' ')
 display('The system presented here is based upon a mathematical representation taken from:')
 display('State-space model for dynamic behavior of vapor compression liquid chiller')
 display('https://www.sciencedirect.com/science/article/abs/pii/S0140700713001187#fig2')
@@ -56,7 +54,7 @@ Lc = 4;                     % N
 L_OverheatedRegionC = 0.85;    % N
 L_2phaseRegionC = 0.4;        % N
 %temperature [C]
-t_kondensasjon = 87.4;         % N
+t_condensation = 87.4;         % N
 t_heatExchangerWall_OverheatedRegion = 91.0;   % N
 t_heatExchangerWall_twoPhaseRegionC = 88.2;    % N
 t_heatExchangerWall_OverCoolingRegionC = 1; % N
@@ -96,41 +94,41 @@ display(' ')
 x = input('Press "Enter" to continue!');
 clc;
 
-deltaX = [L_OverheatedRegionC,t_kondensasjon,L_2phaseRegionC,t_condenserOutlet,t_heatExchangerWall_OverheatedRegion,t_heatExchangerWall_twoPhaseRegionC,t_heatExchangerWall_OverCoolingRegionC,t_coolantMedium_twoPhaseRegionC,t_coolantMedium_overheatedRegionC,t_coolantMedium_OutletC];  
+deltaX = [L_OverheatedRegionC,t_condensation,L_2phaseRegionC,t_condenserOutlet,t_heatExchangerWall_OverheatedRegion,t_heatExchangerWall_twoPhaseRegionC,t_heatExchangerWall_OverCoolingRegionC,t_coolantMedium_twoPhaseRegionC,t_coolantMedium_overheatedRegionC,t_coolantMedium_OutletC];  
 deltaU = [G_refrigerant_CompressorOutlet,G_refrigerant_condenserOutlet,t_condenserOutlet,t_coolantMedium_InletC,G_coolantMediumC];
-deltaY = [t_kondensasjon,t_condenserOutlet,t_coolantMedium_OutletC];
+deltaY = [t_condensation,t_condenserOutlet,t_coolantMedium_OutletC];
 
 %% The elements to be Partial derivated
 %
 T1 = (1.0/8.0)*pi*(d_evaporator^2.0)*p2*(h2-h_refrigerantVaporC)
-X11 = alfa_refrigerant*(Ac/Lc)*(t_heatExchangerWall_OverheatedRegion - ((t_kondensasjon + t_compressorOutlet) / 2.0))
+X11 = alfa_refrigerant*(Ac/Lc)*(t_heatExchangerWall_OverheatedRegion - ((t_condensation + t_compressorOutlet) / 2.0))
 X12 = -alfa_refrigerant*L_OverheatedRegionC*(Ac/(2.0*Lc))
 X13 = alfa_refrigerant*L_OverheatedRegionC*(Ac/Lc)
 X14 = h2-h_refrigerantVaporC
 X15 = -alfa_refrigerant*L_OverheatedRegionC*(Ac/(2.0*Lc))
 T2 = (1.0/8.0)*pi*(d_evaporator^2.0)*L_OverheatedRegionC*(dp_dt)
-X21 = -alfa_refrigerant*(Ac/Lc)*(t_heatExchangerWall_OverheatedRegion - ((t_kondensasjon + t_compressorOutlet) / 2.0))*((p2-p_refrigerantVaporC)/p2*(h2-h_refrigerantVaporC))
+X21 = -alfa_refrigerant*(Ac/Lc)*(t_heatExchangerWall_OverheatedRegion - ((t_condensation + t_compressorOutlet) / 2.0))*((p2-p_refrigerantVaporC)/p2*(h2-h_refrigerantVaporC))
 X22 = alfa_refrigerant*L_OverheatedRegionC*(Ac/(2.0*Lc))*(p2-p_refrigerantVaporC)/p2*(h2-h_refrigerantVaporC) - alfa_refrigerant*(Ac/Lc)*(L_2phaseRegionC/h_latentC)
-X23 = - alfa_refrigerant*(Ac/Lc)*(1/h_latentC)*(t_kondensasjon - t_heatExchangerWall_twoPhaseRegionC)
+X23 = - alfa_refrigerant*(Ac/Lc)*(1/h_latentC)*(t_condensation - t_heatExchangerWall_twoPhaseRegionC)
 X24 = -alfa_refrigerant*L_OverheatedRegionC*(Ac/Lc)*(p2-p_refrigerantVaporC)/p2*(h2-h_refrigerantVaporC)
 X25 = alfa_refrigerant*(Ac/Lc)*(L_2phaseRegionC/h_latentC)
 X26 = p_refrigerantVaporC/p2
 X27 = alfa_refrigerant*L_OverheatedRegionC*(Ac/Lc)*(p2-p_refrigerantVaporC)/p2*(h2-h_refrigerantVaporC)
 T3 = (pi/4)*(d_evaporator^(2.0))*p_liquid*h_latentC*(1-voidFraction)
 X31 = alfa_refrigerant*(Ac/Lc)*(L_2phaseRegionC)
-X32 = alfa_refrigerant*(Ac/Lc)*(t_kondensasjon - t_heatExchangerWall_twoPhaseRegionC)
+X32 = alfa_refrigerant*(Ac/Lc)*(t_condensation - t_heatExchangerWall_twoPhaseRegionC)
 X33 = -alfa_refrigerant*(Ac/Lc)*(L_2phaseRegionC)
 X34 = -h_latentC;
 T4 = p_refrigerantLiquid*c_p_Liquid*V_refrigerantC*((Lc-L_OverheatedRegionC-L_2phaseRegionC)/(2.0*Lc))
-X41 = ((G_refrigerant_condenserOutlet*c_p_condenserOutlet)/(Lc-L_OverheatedRegionC-L_2phaseRegionC))*(t_kondensasjon - t_condenserOutlet)-((T4/T2)*X21)
+X41 = ((G_refrigerant_condenserOutlet*c_p_condenserOutlet)/(Lc-L_OverheatedRegionC-L_2phaseRegionC))*(t_condensation - t_condenserOutlet)-((T4/T2)*X21)
 X42 = (G_refrigerant_condenserOutlet*c_p_condenserOutlet)-alfa_refrigerant*(Ac/(2.0*Lc))*(Lc-L_OverheatedRegionC-L_2phaseRegionC)-((T4/T2)*X22)
-X43 = ((G_refrigerant_condenserOutlet*c_p_condenserOutlet)/(Lc-L_OverheatedRegionC-L_2phaseRegionC))*(t_kondensasjon - t_condenserOutlet)-((T4/T2)*X23)
+X43 = ((G_refrigerant_condenserOutlet*c_p_condenserOutlet)/(Lc-L_OverheatedRegionC-L_2phaseRegionC))*(t_condensation - t_condenserOutlet)-((T4/T2)*X23)
 X44 = -(G_refrigerant_condenserOutlet*c_p_condenserOutlet+alfa_refrigerant*(Ac/Lc)*(Lc-L_OverheatedRegionC-L_2phaseRegionC))
 X45 = -((T4/T2)*X24)
 X46 = -((T4/T2)*X25)
 X47 = alfa_refrigerant*(Ac/Lc)*(Lc-L_OverheatedRegionC-L_2phaseRegionC)
 X48 = -((T4/T2)*X26)
-X49 = (t_kondensasjon - t_condenserOutlet)*c_p_condenserOutlet
+X49 = (t_condensation - t_condenserOutlet)*c_p_condenserOutlet
 X40 = -((T4/T2)*X27)
 T5 = V_heatExchangerWallC*p_heatExchangerWallC*c_p_heatExchangerWallC*(L_OverheatedRegionC/Lc)
 X51 = alfa_refrigerant*(Ac*L_OverheatedRegionC/(2.0*Lc))
@@ -182,7 +180,7 @@ clc;
 %% A-matrix
 %
 display('The A matrix, often known as the transition matrix.')
-display('It explains the dynamic proparties of the system!')
+display('It explains the dynamic properties of the system!')
 
 A = [...
    X11/T1,X12/T1,0,0,X13/T1,0,0,0,0,0; ...
@@ -245,16 +243,16 @@ clc;
 %% system eq.
 %
 display('State system is based upon A, B, C and D matrix. Since this a large MIMO system')
-display('with 5 control points and 3 outputs, we will convert it to 15 transfer functions.')
+display('with 5 state variables/"control points" and 3 outputs, it will be converted into 15 transfer functions.')
 display('For an easier overview, input and output variables will be displayed on all the matrices.')
 display('Afterwards we will display all the 15 transfer functions.')
 display(' ')
 x = input('Press "Enter" to continue!');
 clc;
 
-delta_X = {'L_OverheatedRegionC' 't_kondensasjon' 'L_2phaseRegionC' 't_condenserOutlet' 't_heatExchangerWall_OverheatedRegion' 't_heatExchangerWall_twoPhaseRegionC' 't_heatExchangerWall_OverCoolingRegionC' 't_coolantMedium_twoPhaseRegionC' 't_coolantMedium_overheatedRegionC' 't_coolantMedium_OutletC'};  
+delta_X = {'L_OverheatedRegionC' 't_condensation' 'L_2phaseRegionC' 't_condenserOutlet' 't_heatExchangerWall_OverheatedRegion' 't_heatExchangerWall_twoPhaseRegionC' 't_heatExchangerWall_OverCoolingRegionC' 't_coolantMedium_twoPhaseRegionC' 't_coolantMedium_overheatedRegionC' 't_coolantMedium_OutletC'};  
 delta_U = {'G_refrigerant_CompressorOutlet' 'G_refrigerant_condenserOutlet' 't_condenserOutlet' 't_coolantMedium_InletC' 'G_coolantMediumC'};
-delta_Y = {'t_kondensasjon' 't_condenserOutlet' 't_coolantMedium_OutletC'};
+delta_Y = {'t_condensation' 't_condenserOutlet' 't_coolantMedium_OutletC'};
 
 Sys_ss = ss(A,B,C,D,'statename',delta_X,'inputname',delta_U,'outputname',delta_Y)
 
@@ -280,7 +278,7 @@ clc;
 
 %% Transfer function's
 %
-display('We have 10 inputs, 5 control points and 3 outputs for our system.')
+display('We have 10 inputs, 5 state variables and 3 outputs for our system.')
 display('This means that we have 15 transfer functions for this system.')
 display('For an example, here we have the transfer function for')
 display('the output temperature from regulation of the mass flow')
@@ -320,6 +318,73 @@ if strcmp(x,'y') | strcmp(x,'Y')
     pzplot(TF_massFlowRateCompressorControl)
     grid on
 end
+% prompt = 'Do you want like to se an exemple of regulation? Y/N [Y]: ';
+% x = input(prompt,'s');
+% if strcmp(x,'y') | strcmp(x,'Y')
+%     %
+%     G = 0;
+%     
+%     
+%     zero(G)
+%     
+%     
+%     
+%     
+%     poles = [-20-5*i,-20+5*i]
+%     L = place(A',C',poles)
+%     desired_FM = 50;
+%     %bode
+%     figure('Name', 'Bode of G(s)'); bode(G), grid on;
+%     %Regulering
+%     n = 10.0;    
+%     H_arg = 20.0;    
+%     %Ønsket kryssfrekvens der vinkel Gp er:    
+%     G_phase_arg = -180.0 + desired_FM - H_arg 
+%     w_onsket = input('Skriv inn ønsket kryssfrekvens: ')    
+%     Ti = 2.8 / w_onsket;    
+%     Td = 1.0 / w_onsket;
+%     G_dB = input('Les av 20lg|Gp(w_onsket)| : ')    
+%     H_dB = 3.5;    
+%     kr_dB = - G_dB - H_dB;    
+%     kr = 10.0^(kr_dB/20);    
+%     H = tf([Ti,1],[Ti,0]) * tf([Td,1],[(Td/n),1]); 
+%     %
+%     kr
+%     H
+%     Gr = kr * H;
+%     G_Regulert = Gr * Gp
+% 
+%     figure('Name', 'Bode of regulert system')
+%     bode(G)
+%     grid on
+% 
+%     M_TilbakekobletSys = feedback(G_Regulert,1)
+%     figure('Name', 'Step-response of M(s)')
+%     step(M_TilbakekobletSys)
+%     grid on
+%     
+%     %
+%     figure(1)
+%     bode(TF_massFlowRateCompressorControl)
+%     grid on
+% 
+%     pause
+%     x = input('Press "Enter" to continue!');
+%     clc; close all;
+% 
+%     figure(1)
+%     step(TF_massFlowRateCompressorControl)
+%     grid on
+% 
+%     pause
+%     x = input('Press "Enter" to continue!');
+%     clc; close all;
+% 
+%     pole(TF_massFlowRateCompressorControl)
+%     figure(1)
+%     pzplot(TF_massFlowRateCompressorControl)
+%     grid on
+% end
 
 x = input('Press "Enter" to continue!');
 clc; close all;
@@ -329,7 +394,7 @@ clc; close all;
 %% Stability and reachability
 %
 
-display('It is important that all eigenvalues have negative real part.')
+display('It is important that all eigenvalues/ poles have negative real part.')
 display('If at least one eigenvalue has a positive part,')
 display('the equilibrium will be unstable.')
 System_eig = eig(A);
@@ -345,12 +410,14 @@ display(' ')
 x = input('Press "Enter" to continue!');
 clc;
 
-display('For all negative determinants the system is stable,')
+display('For all negative real parts the system is stable,')
 display('on the other hand, all the positives are unstable')
 display('and need further adjustments to change pole placements.')
-
-display('The determinants of the systems inputs are:')
-System_det
+display(' ')
+display('This system has unfortunate pole placement that needs to')
+display('be addressed for it to be stable.')
+%display('The determinants of the systems inputs are:')
+%System_det
 
 %     display('The A matrix has a zero determinant and is "called singular or non-invertible"')
 %     display('There exists a vector v =/= 0 such that Av = 0')
@@ -386,6 +453,7 @@ display(' ')
 prompt = 'Do you want to see the observability matrix? Y/N [Y]: ';
 x = input(prompt,'s');
 if strcmp(x,'y') | strcmp(x,'Y')
+    clc;
     observability =  obsv(A,C)
     rank = rank(observability)
 end
@@ -393,18 +461,29 @@ end
 x = input('Press "Enter" to continue!');
 clc;
 
-%% Controlabilety
+%% Controllability
 %
 display('Controllability depends on the A and B matrix, and not C!')
 display('The A matrix has the dynamic components of the system.')
 display('The B matrix is routing input values to the state variables!')
 display('The A is a 10X10 matrix and B is a 10X5 matrix')
-display('We will therfore get 10X50 values that will determine controllability!')
+display('We will therefore get 10X50 values that will determine controllability!')
 display(' ')
 prompt = 'Do you want to se the controlability matrix? Y/N [Y]: ';
 x = input(prompt,'s');
 if strcmp(x,'y') | strcmp(x,'Y')
     controlabilety =  ctrb(A,B)
+    %Rank_of_con = rank(controlabilety)
+    %Determinant_of_cont = det(controlabilety) 
+    
+    display('Using the determinant to determine controllability only works if you')
+    display('only have only one input, i.e. the input matrix B has only one column.') 
+    display('Namely, for more inputs the controllability matrix C is not square.') 
+    display('The matrix CC⊤ would always be square and if its determinant is non-zero')
+    display('when the controllability matrix has full rank. This is similar to checking')
+    display('whether the controllability matrix has "n" non-zero singular values,') 
+    display('with "n" the size of the system state.')
+    display('So this has to be taken in consideration here!')
 end
 
 x = input('Press "Enter" to continue!');
@@ -412,9 +491,9 @@ clc;
 
 %%
 
-%% Thank you for
+%% Thank you for your attention!
 %
-display('Thank you for attention.')
+display('Thank you for your attention!')
 display(' ')
 x = input('The program is done. Press "Enter" to finish!');
 clc; clear all; close all;
